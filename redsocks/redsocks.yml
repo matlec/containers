@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redsocks-deployment
+  labels:
+    app: redsocks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redsocks
+  template:
+    metadata:
+      namespace: kube-system
+      labels:
+        app: redsocks
+    spec:
+      containers:
+      - name: redsocks
+        image: redsocks:latest
+        imagePullPolicy: Never
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        env:
+        - name: HTTP_PROXY_HOST
+          value: "192.168.10.1"
+        - name: HTTP_PROXY_PORT
+          value: "5865"
+      hostNetwork: true
